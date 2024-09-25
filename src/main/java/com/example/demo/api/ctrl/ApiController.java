@@ -78,6 +78,10 @@ public class ApiController {
             dto.setAddress(item.get("address").asText());
             dto.setLat(item.get("mapx").asText());
             dto.setLng(item.get("mapy").asText());
+            
+            dto.setLat(String.valueOf( Double.parseDouble( item.get("mapx").asText() ) / 1e7 ));
+            dto.setLng(String.valueOf( Double.parseDouble( item.get("mapy").asText() ) / 1e7 ));
+
             list.add(dto);
         }
         } catch(Exception e){
