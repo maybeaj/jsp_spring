@@ -187,6 +187,7 @@ uri="http://java.sun.com/jsp/jstl/core" %>
 				// 검색 결과를 목록으로 변환하여 출력
 				restaurants.forEach(function (restaurant) {
 					let listItem = document.createElement("div");
+                    listItem.classList.add('restaurant-item');
 					// 각 장소의 이름과 주소 표시
 					listItem.innerHTML =
 						"<strong>" +
@@ -194,6 +195,10 @@ uri="http://java.sun.com/jsp/jstl/core" %>
 						"</strong><br>" +
 						restaurant.address;
 					searchResultsElement.appendChild(listItem);
+
+                    listItem.addEventListener('click',function(){
+                        moveMapToRestaurantLocation(restaurant);
+                    })
 				});
 			}
 
@@ -202,15 +207,15 @@ uri="http://java.sun.com/jsp/jstl/core" %>
 			function displayMarkers(restaurants) {
 				const map = new kakao.maps.Map(document.getElementById("map"), {
 					center: new kakao.maps.LatLng(
-						restaurants[0].lng,
-						restaurants[0].lat
+						restaurants[0].lat,
+						restaurants[0].lng
 					),
 					level: 3,
 				});
 				// 모든 장소에 대해 마커 표시
 				restaurants.forEach(function (restaurant) {
-					const latitude = restaurant.lng; // 위도
-					const longitude = restaurant.lat; // 경도 
+					const latitude = restaurant.lat; // 위도
+					const longitude = restaurant.lng; // 경도 
 					// 마커 이미지 크기
 					const imageSize = new kakao.maps.Size(24, 35);
 					// 마커 이미지 생성
@@ -237,15 +242,15 @@ uri="http://java.sun.com/jsp/jstl/core" %>
 				});
 			}
 
-			function moveMapToRestaurantLocation() {
+			function moveMapToRestaurantLocation(clickedRestaurant) {
 				if (clickedRestaurant) {
 					// 클릭한 장소 정보가 존재하는 경우
 					const mapContainer = document.getElementById("map"); // 지도를 표시할 영역의 DOM 요소
 					const mapOption = {
 						// 지도 옵션 설정
 						center: new kakao.maps.LatLng(
-							clickedRestaurant.latitude,
-							clickedRestaurant.longitude
+							clickedRestaurant.lat,
+							clickedRestaurant.lng
 						), // 지도의 중심좌표 설정
 						level: 3, // 지도 확대 레벨 설정
 					};
@@ -257,8 +262,8 @@ uri="http://java.sun.com/jsp/jstl/core" %>
 					const marker = new kakao.maps.Marker({
 						map: map, // 마커를 표시할 지도 객체 설정
 						position: new kakao.maps.LatLng(
-							clickedRestaurant.latitude,
-							clickedRestaurant.longitude
+							clickedRestaurant.lat,
+							clickedRestaurant.lng
 						), // 마커의 위치 설정
 						title: clickedRestaurant.title.replace(/<[^>]+>/g, ""), // 마커에 표시될 타이틀 설정 (HTML 태그 제거)
 					});
